@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+	<defs>
+		<pattern id="pattern_o2NFB" patternUnits="userSpaceOnUse" width="60" height="60" patternTransform="rotate(0)">
+			<line x1="0" y="0" x2="0" y2="60" stroke="#212D6D" stroke-width="20" />
+		</pattern>
+	</defs>
+	<rect width="100%" height="100%" fill="url(#pattern_o2NFB)" :opacity="1" />
+</svg>
