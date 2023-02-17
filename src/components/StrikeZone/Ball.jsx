@@ -5,8 +5,8 @@ import { useHover, useMove, useGesture, useDrag } from "react-use-gesture";
 import PubSub from "pubsub-js";
 
 const BallContainer = styled(animated.div)({
-  width: "100px",
-  height: "100px",
+  width: "50px",
+  height: "50px",
   backgroundColor: "white",
   backgroundSize: "cover",
   backgroundImage: `url('/ball.png')`,

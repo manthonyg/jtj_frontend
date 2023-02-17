@@ -12,15 +12,14 @@ const Box = styled(animated.div)({
   height: "400px",
   margin: 5,
   opacity: 0.5,
-  boxShadow: "5px 5px 20px #ffffff50, -5px -5px 20px #ffffff50",
+  boxShadow: `20px 20px 60px #1c1c1c,
+             -20px -20px 60px #262626`,
   transition: "box-shadow 0.5s, opacity 0.5s",
   willChange: "transform",
   cursor: "grab",
   overflow: "hidden",
   touchAction: "none",
 });
-
-const strikeZones = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
 export const BallBox = ({ zone }) => {
   const [_rotateX, setRotateX] = useState(0);

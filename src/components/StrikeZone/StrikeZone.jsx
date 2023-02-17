@@ -18,10 +18,9 @@ const Container = styled(animated.div)({
   alignItems: "center",
   flexWrap: "wrap",
   zIndex: 9,
-  gap: 15,
-  width: 630,
-  height: 670,
-  transform: "scale(0.8)",
+  gap: 5,
+  width: 400,
+  height: 350,
   flexDirection: "row",
   justifyContent: "center",
 });
@@ -66,23 +65,15 @@ export const StrikeZone = () => {
     })
   );
 
-  const handleWave = ({ x, y }) => {
-    console.log("handle wwave");
-    api.start({
-      rotateX: 180,
-      x: x + 50,
-      y: 50,
-    });
-  };
-
   return (
-    <Container ref={domRef}>
-      <Ball />
+    <>
+      <Container ref={domRef}>
+        <Ball />
 
-      {trail.map(({ rotateX, x, y }, zone) => {
-        return <StrikeBox style={{ x, rotateX }} zone={strikeZones[zone]} />;
-      })}
-      <Box
+        {trail.map(({ rotateX, x, y }, zone) => {
+          return <StrikeBox style={{ x, rotateX }} zone={strikeZones[zone]} />;
+        })}
+        {/* <Box
         style={{
           width: 500,
           border: "2px solid #cccccc",
@@ -92,7 +83,8 @@ export const StrikeZone = () => {
         }}
       >
         <Legend />
-      </Box>
-    </Container>
+      </Box> */}
+      </Container>
+    </>
   );
 };

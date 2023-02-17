@@ -7,6 +7,7 @@ import { Login } from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import Main from "./pages/Main";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import theme from "./theme";
 
@@ -31,13 +32,13 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <MuiThemeProvider theme={theme}>
-      <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
-        <RouterProvider router={router} />;
-      </div>
-    </MuiThemeProvider>
-  </React.StrictMode>
+  <GoogleOAuthProvider clientId="573638032527-4r7d005c9v0mtk7nta5ocejjev5fglqq.apps.googleusercontent.com">
+    <React.StrictMode>
+      <MuiThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </MuiThemeProvider>
+    </React.StrictMode>
+  </GoogleOAuthProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

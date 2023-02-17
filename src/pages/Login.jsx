@@ -13,7 +13,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { css } from "@emotion/react";
 import { styled } from "@mui/material/styles";
-import { url } from "inspector";
+import { GoogleLogin } from "@react-oauth/google";
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled(Grid)`
   border: ${(props) => props.theme.palette.primary.main};
@@ -22,7 +25,7 @@ const Container = styled(Grid)`
   padding-top: 20px;
 `;
 
-function Copyright(props: any) {
+function Copyright(props) {
   return (
     <Typography
       variant="body2"
@@ -41,13 +44,59 @@ function Copyright(props: any) {
 }
 
 export const Login = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const responseMessage = (response) => {
+    console.log(response);
+  };
+  const errorMessage = (error) => {
+    console.log(error);
+  };
+
+  const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get("email"),
       password: data.get("password"),
     });
+  };
+
+  const [user, setUser] = React.useState([]);
+  const [profile, setProfile] = React.useState([]);
+
+  const navigate = useNavigate();
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      console.log({ codeResponse });
+      setUser(codeResponse);
+    },
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
+  React.useEffect(() => {
+    if (user) {
+      axios
+        .get(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res.data);
+          navigate("/strikezone", { state: { user: res.data } });
+          setProfile(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [user]);
+
+  const logOut = () => {
+    googleLogout();
+    setProfile(null);
   };
 
   return (
@@ -68,8 +117,8 @@ export const Login = () => {
               ? t.palette.secondary.main
               : t.palette.grey[900],
           backgroundSize: "cover",
-
-          background: "url(../assets/pinstripe_background.jpg)",
+          backgroundRepeat: "no-repeat",
+          background: "url(/swing.svg)",
         }}
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -80,6 +129,7 @@ export const Login = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            background: "url(/icon.svg)",
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -88,6 +138,12 @@ export const Login = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          <Button onClick={() => login()}>Login with Google</Button>
+          {/* <GoogleLogin
+            onSuccess={responseMessage}
+            onError={() => console.log("error")}
+          /> */}
+
           <Box
             component="form"
             noValidate

@@ -7,13 +7,14 @@ import { gradientAngle, orbitalGradient, shadeOfRed } from "./utils";
 
 const FrontBox = styled(animated.div)({
   position: "relative",
-  width: "200px",
-  height: "225px",
+  width: "100px",
+  height: "112.5px",
+  color: "#ffffff",
   borderRadius: 5,
   boxSizing: "border-box",
-  boxShadow: `10px 10px 20px #929292,
-               -10px -10px 40px #c2c2c2`,
-  border: "2px solid #ffffff50",
+  border: "2px solid #00000050",
+  // boxShadow: `19px 19px 39px #0d0d0d,
+  // -19px -19px 39px #353535;`,
   // transition: "box-shadow 0.5s, opacity 0.5s",
   willChange: "transform",
   overflow: "hidden",
@@ -58,11 +59,11 @@ export const StrikeBox = ({ zone }) => {
       zoom: 0,
       x: 0,
       y: 0,
-      config: { mass: 5, tension: 250, friction: 40 },
+      config: { mass: 3, tension: 150, friction: 5 },
     }));
 
   const tiltEffectSettings = {
-    max: 15, // max tilt rotation (degrees (deg))
+    max: 20, // max tilt rotation (degrees (deg))
     perspective: 1000, // transform perspective, the lower the more extreme the tilt gets (pixels (px))
     scale: 1.0, // transform scale - 2 = 200%, 1.5 = 150%, etc..
     speed: 500, // speed (transition-duration) of the enter/exit transition (milliseconds (ms))
@@ -124,7 +125,7 @@ export const StrikeBox = ({ zone }) => {
       cardTop,
       cardWidth,
       cardHeight,
-      100
+      50
     );
 
     const gradientAngleOf = gradientAngle(
@@ -214,11 +215,23 @@ export const StrikeBox = ({ zone }) => {
         rotateX: to([rotateX, rotateZ], (r, z) => `${-r}deg`),
         rotateY: to([rotateY, rotateZ], (r, z) => `${-r}deg`),
         rotateZ,
-        opacity: isHovered ? 1 : 0.5,
-        background: isHovered ? gradient : "#0000ff",
+        opacity: 1,
+        background: isHovered ? gradient : "#3c52c3",
       }}
     >
-      {zone}
+      <p
+        {...bind()}
+        style={{
+          opacity: isHovered ? 1 : 0,
+          transform: "perspective(600px)",
+          rotateX,
+          rotateY,
+          rotateZ,
+          scale: 5,
+        }}
+      >
+        {zone}
+      </p>
     </FrontBox>
   );
 };
