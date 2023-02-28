@@ -68,9 +68,41 @@ export const shadeOfRed = (
   red = Math.round(255 * (1 - normalizedDistance));
   blue = Math.round(255 * normalizedDistance);
 
-  // // Clamp values to valid range of 0-255
+  // Clamp values to valid range of 0-255
   red = Math.max(0, Math.min(255, red));
   blue = Math.max(0, Math.min(255, blue));
 
   return `rgb(${red}, 0, ${blue})`;
+};
+
+export const getClosestHexValue = (number) => {
+  let red, green, blue;
+  if (number <= 0) {
+    // If the number is less than or equal to 0, return pure blue
+    red = 0;
+    green = 0;
+    blue = 255;
+  } else if (number < 5) {
+    // If the number is less than 5, return a shade of purple
+    red = 128;
+    green = 0;
+    blue = 255 - Math.floor((number / 5) * 128);
+  } else if (number < 10) {
+    // If the number is less than 10, return a shade between red and blue
+    red = 255 - Math.floor(((number - 5) / 5) * 128);
+    green = 0;
+    blue = Math.floor(((number - 5) / 5) * 255);
+  } else {
+    // If the number is greater than or equal to 10, return pure red
+    red = 255;
+    green = 0;
+    blue = 0;
+  }
+  // Construct and return the hex value
+  return (
+    "#" +
+    red.toString(16).padStart(2, "0") +
+    green.toString(16).padStart(2, "0") +
+    blue.toString(16).padStart(2, "0")
+  );
 };

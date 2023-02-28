@@ -2,202 +2,151 @@ import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { css } from "@emotion/react";
 import { styled } from "@mui/material/styles";
-import { GoogleLogin } from "@react-oauth/google";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { SocialIcon } from "react-social-icons";
+import { GoogleLoginButton } from "react-social-login-buttons";
+import { createButton } from "react-social-login-buttons";
 
-const Container = styled(Grid)`
-  border: ${(props) => props.theme.palette.primary.main};
-  color: #ccc;
-  margin-top: 50px !important;
-  padding-top: 20px;
-`;
+import {
+  BrowserRouter,
+  Navigate,
+  Redirect,
+  Route,
+  Routes,
+} from "react-router-dom";
 
 function Copyright(props) {
   return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://judgethejudge.com">
-        Judge the Judge
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
+    <>
+      <Typography
+        variant="body2"
+        sx={{
+          fontFamily: "courier",
+        }}
+        color="text.secondary"
+        align="center"
+        {...props}
+      >
+        What is this?
+      </Typography>
+      <Typography>
+        This is a tool that utilizes machine learning to predict the chance
+        Aaron Judge, #99 for the New York Yankees, will hit a home run.{" "}
+        <Link>Learn more about this project</Link>
+      </Typography>
+      <Box>
+        <SocialIcon url="https://linkedin.com/in/michaelgrandori" />
+        <SocialIcon url="https://medium.com" />
+        <SocialIcon url="https://github.com" />
+      </Box>
+    </>
   );
 }
 
 export const Login = () => {
-  const responseMessage = (response) => {
-    console.log(response);
-  };
-  const errorMessage = (error) => {
-    console.log(error);
-  };
+  const { user, loading, login, demoLogin, logout } = useAuth();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const config = {
+    text: "Demo Login",
+    icon: "facebook",
+    iconFormat: (name) => `fa fa-${name}`,
+    style: { background: "#d0453a" },
+    activeStyle: { background: "#d0453a50" },
   };
 
-  const [user, setUser] = React.useState([]);
-  const [profile, setProfile] = React.useState([]);
-
-  const navigate = useNavigate();
-
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      console.log({ codeResponse });
-      setUser(codeResponse);
-    },
-    onError: (error) => console.log("Login Failed:", error),
-  });
-
-  React.useEffect(() => {
-    if (user) {
-      axios
-        .get(
-          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              Accept: "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-          navigate("/strikezone", { state: { user: res.data } });
-          setProfile(res.data);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [user]);
-
-  const logOut = () => {
-    googleLogout();
-    setProfile(null);
-  };
+  const CustomLoginButton = createButton(config);
 
   return (
-    <Grid
-      container
-      component="main"
-      sx={{ height: "100vh", backgroundColor: (t) => t.palette.primary.main }}
-    >
-      <CssBaseline />
+    <>
+      {user && <Navigate to="/strikezone" />}
       <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.secondary.main
-              : t.palette.grey[900],
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          background: "url(/swing.svg)",
-        }}
-      />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <Box
+        container
+        component="main"
+        sx={{ height: "100vh", backgroundColor: (t) => t.palette.primary.main }}
+      >
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
           sx={{
-            my: 8,
-            mx: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            background: "url(/icon.svg)",
+            backgroundColor: (t) =>
+              t.palette.mode === "light"
+                ? t.palette.primary.main
+                : t.palette.grey[900],
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundImage: "url(/swing.svg)",
           }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Button onClick={() => login()}>Login with Google</Button>
-          {/* <GoogleLogin
-            onSuccess={responseMessage}
-            onError={() => console.log("error")}
-          /> */}
-
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
           <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1 }}
+            sx={{
+              my: 8,
+              mx: 4,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              background: "url(/icon.svg)",
+            }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+            <Avatar
+              sx={{
+                m: 5,
+                p: 4,
+                bgcolor: "secondary.main",
+                width: 100,
+                height: 100,
+              }}
             >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+              <img src="/logo.svg" alt="judge the judge logo" />
+            </Avatar>
+            <Typography
+              sx={{
+                fontFamily: "courier",
+              }}
+              component="h1"
+              variant="h5"
+            >
+              JUDGE THE JUDGE
+            </Typography>
+
+            <Box
+              component="form"
+              sx={{
+                mt: 5,
+                width: 300,
+                display: "flex",
+                justifyContent: "center",
+                flexWrap: "wrap",
+              }}
+              noValidate
+            >
+              <GoogleLoginButton
+                disabled
+                style={{ width: 250 }}
+                onClick={() => login()}
+              ></GoogleLoginButton>
+              <CustomLoginButton
+                style={{ width: 250 }}
+                onClick={() => demoLogin()}
+              />
+              <Grid container>
+                <Grid item xs></Grid>
+                <Grid item></Grid>
               </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-            <Copyright sx={{ mt: 5 }} />
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
           </Box>
-        </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };

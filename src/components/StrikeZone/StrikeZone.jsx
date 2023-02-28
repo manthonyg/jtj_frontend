@@ -69,21 +69,9 @@ export const StrikeZone = () => {
     <>
       <Container ref={domRef}>
         <Ball />
-
         {trail.map(({ rotateX, x, y }, zone) => {
           return <StrikeBox style={{ x, rotateX }} zone={strikeZones[zone]} />;
         })}
-        {/* <Box
-        style={{
-          width: 500,
-          border: "2px solid #cccccc",
-          borderRadius: 10,
-          margin: 10,
-          padding: 10,
-        }}
-      >
-        <Legend />
-      </Box> */}
       </Container>
     </>
   );

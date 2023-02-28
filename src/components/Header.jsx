@@ -14,10 +14,13 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import CssBaseline from "@mui/material/CssBaseline";
 import { HideOnScroll } from "./HideOnScroll";
-const pages = ["Home", "About", "Contact"];
-const settings = ["Dashboard", "Logout"];
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
-function ResponsiveAppBar({ children, user, ...props }) {
+const pages = ["Home", "About", "Contact"];
+const settings = ["Logout"];
+
+function ResponsiveAppBar({ children, ...props }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -36,6 +39,9 @@ function ResponsiveAppBar({ children, user, ...props }) {
     setAnchorElUser(null);
   };
 
+  const navigate = useNavigate();
+  const { user = null, profile, login, logout } = useAuth();
+
   return (
     <>
       <CssBaseline />
@@ -47,6 +53,7 @@ function ResponsiveAppBar({ children, user, ...props }) {
           <Container maxWidth="xl">
             <Toolbar disableGutters>
               <img
+                onClick={() => navigate("/")}
                 src="/logo.svg"
                 alt="logo"
                 height={50}
@@ -103,7 +110,12 @@ function ResponsiveAppBar({ children, user, ...props }) {
                 >
                   {pages.map((page) => (
                     <MenuItem key={page} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
+                      <Typography
+                        textAlign="center"
+                        onClick={() => navigate(`/${page}`)}
+                      >
+                        {page}
+                      </Typography>
                     </MenuItem>
                   ))}
                 </Menu>
@@ -139,37 +151,40 @@ function ResponsiveAppBar({ children, user, ...props }) {
               </Box>
 
               <Box sx={{ flexGrow: 0 }}>
-                {user && (
-                  <div>
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      color="inherit"
-                    >
-                      <img
-                        src={user.picture}
-                        alt={user.given_name}
-                        height={50}
-                        width={50}
-                      />
-                    </IconButton>
-                    <Menu
-                      id="menu-appbar"
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      keepMounted
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                    >
-                      <MenuItem>Logout</MenuItem>
-                    </Menu>
-                  </div>
+                {profile && (
+                  <Tooltip label={profile.given_name} placement="bottom">
+                    <div>
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        onClick={handleOpenUserMenu}
+                      >
+                        <Tooltip label={profile.given_name} placement="bottom">
+                          <img
+                            src={profile.picture}
+                            alt={profile.given_name}
+                            height={50}
+                            width={50}
+                          />
+                        </Tooltip>
+                      </IconButton>
+                      <Menu
+                        id="menu-appbar"
+                        anchorOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "right",
+                        }}
+                      ></Menu>
+                    </div>
+                  </Tooltip>
                 )}
                 {/* {children} */}
 
@@ -190,7 +205,7 @@ function ResponsiveAppBar({ children, user, ...props }) {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <MenuItem key={setting} onClick={logout}>
                       <Typography textAlign="center">{setting}</Typography>
                     </MenuItem>
                   ))}
