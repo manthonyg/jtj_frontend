@@ -1,13 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import {
-  BrowserRouter,
-  Navigate,
-  Redirect,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Login } from "./pages/Login";
@@ -17,13 +11,7 @@ import Main from "./pages/Main";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import About from "./pages/About";
 import theme from "./theme";
-import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-} from "recoil";
+import { RecoilRoot } from "recoil";
 
 const router = createBrowserRouter([
   {

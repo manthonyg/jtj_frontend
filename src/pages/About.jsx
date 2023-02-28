@@ -8,16 +8,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Footer from "../components/Footer";
 import { useAuth } from "../hooks/useAuth";
-import {
-  BrowserRouter,
-  Navigate,
-  Redirect,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 export default function Album() {
-  const { user, profile, login, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <>

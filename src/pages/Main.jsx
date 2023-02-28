@@ -227,7 +227,7 @@ export default function Main(props) {
         pitchNumber: parseInt(pitch.balls) + parseInt(pitch.strikes),
         zone: zone,
       };
-      const data = await fetch("http://localhost:3002/predict", {
+      const data = await fetch("http://3.83.153.234:3002/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

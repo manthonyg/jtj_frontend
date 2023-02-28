@@ -1,5 +1,4 @@
-import React from "react";
-import { atom, selector, useRecoilState, useRecoilValue } from "recoil";
+import { atom } from "recoil";
 
 export const pitchesState = atom({
   key: "pitches", // unique ID (with respect to other atoms/selectors)

@@ -2,13 +2,7 @@ import React from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import { Grid } from "@mui/material";
-import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-} from "recoil";
+import { RecoilRoot } from "recoil";
 
 function App() {
   return (
