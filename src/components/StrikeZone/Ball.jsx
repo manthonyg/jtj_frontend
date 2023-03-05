@@ -19,6 +19,7 @@ const BallContainer = styled(animated.div)({
 
 export const Ball = () => {
   const [strikeZoneBounds, setStrikeZoneBounds] = useState(null);
+  console.log("ok");
   useEffect(() => {
     const token = PubSub.subscribe("strike-zone-bounds", (msg, bounds) => {
       setStrikeZoneBounds(bounds);
