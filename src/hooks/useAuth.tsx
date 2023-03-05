@@ -36,7 +36,6 @@ export const useAuth = () => {
           }
         )
         .then((res) => {
-          console.log(res.data);
           navigate("/strikezone", { state: { user: res.data } });
           setProfile(res.data);
         })
@@ -46,7 +45,6 @@ export const useAuth = () => {
 
   const login = useGoogleLogin({
     onSuccess: (codeResponse) => {
-      console.log({ codeResponse });
       setUser(codeResponse);
     },
     onError: (error) => console.log("Login Failed:", error),
@@ -57,7 +55,6 @@ export const useAuth = () => {
   };
 
   const logout = () => {
-    console.log("logging out");
     googleLogout();
     window.localStorage.removeItem("user");
     window.localStorage.removeItem("profile");

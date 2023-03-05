@@ -36,9 +36,9 @@ export default function Footer() {
       <Paper square sx={{ pb: "50px" }}></Paper>
       <AppBar position="fixed" color="primary" sx={{ top: "auto", bottom: 0 }}>
         <Toolbar>
-          <StyledFab color="secondary" aria-label="add">
+          {/* <StyledFab color="secondary" aria-label="add">
             <Button>Reset</Button>
-          </StyledFab>
+          </StyledFab> */}
           <Box sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>

@@ -13,9 +13,6 @@ const FrontBox = styled(animated.div)({
   borderRadius: 5,
   boxSizing: "border-box",
   border: "2px solid #00000050",
-  // boxShadow: `19px 19px 39px #0d0d0d,
-  // -19px -19px 39px #353535;`,
-  // transition: "box-shadow 0.5s, opacity 0.5s",
   willChange: "transform",
   overflow: "hidden",
   touchAction: "none",
@@ -114,7 +111,6 @@ export const StrikeBox = ({ zone }) => {
         ? tiltEffectSettings.max
         : rotateYUncapped;
 
-    console.log({ rotateX, rotateY });
     setRotateX(rotateX);
     setRotateY(rotateY);
 
@@ -136,7 +132,6 @@ export const StrikeBox = ({ zone }) => {
       cardWidth,
       cardHeight
     );
-    console.log({ gradientAngleOf });
 
     const calculatedGradient = shadeOfRed(
       x,
@@ -180,12 +175,20 @@ export const StrikeBox = ({ zone }) => {
   };
 
   const bind = useGesture({
-    // onDrag: ({ active, offset: [x, y] }) =>
-    // api({ x, y, rotateX: 0, rotateY: 0, scale: active ? 1 : 1.1 }),
-    // onPinch: ({ offset: [d, a] }) => api({ zoom: d / 200, rotateZ: a }),
+    onPinch: ({ offset: [d, a] }) => hoverApi({ zoom: d / 200, rotateZ: a }),
     onMove: ({ xy: [px, py], dragging }) => {
       return (
         !dragging &&
+        hoverApi({
+          rotateX: _rotateX,
+          rotateY: _rotateY,
+          scale: 1,
+        })
+      );
+    },
+    onDrag: ({ down, movement: [mx, my] }) => {
+      return (
+        down &&
         hoverApi({
           rotateX: _rotateX,
           rotateY: _rotateY,
@@ -207,7 +210,6 @@ export const StrikeBox = ({ zone }) => {
       ref={ref}
       {...bind()}
       onMouseLeave={mouseLeave}
-      onClick={() => console.log("clicked")}
       style={{
         transform: "perspective(600px)",
         transition: "opacity 0.5s ease",

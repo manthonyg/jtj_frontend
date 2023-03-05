@@ -1,17 +1,11 @@
 import { useEffect, useRef } from "react";
-import { useTrail, useSpring, animated, to } from "@react-spring/web";
+import { useTrail, animated } from "@react-spring/web";
 import { styled } from "@mui/system";
-import { useHover, useMove, useGesture } from "react-use-gesture";
+import { useGesture } from "react-use-gesture";
 import PubSub from "pubsub-js";
 import { useState } from "react";
 import { StrikeBox } from "./StrikeBox";
-import { BallBox } from "./BallBox";
 import { Ball } from "./Ball";
-import { gradientAngle, orbitalGradient } from "./utils";
-import { SettingsPowerSharp } from "@mui/icons-material";
-import { createDocumentRegistry } from "typescript";
-import Legend from "../Legend";
-import Box from "@mui/material/Box";
 
 const Container = styled(animated.div)({
   display: "flex",
@@ -35,7 +29,6 @@ export const StrikeZone = () => {
 
   useEffect(() => {
     const token = PubSub.subscribe("zoneSelected", (msg, data) => {
-      console.log({ msg, data });
       setZone(data);
     });
 
@@ -66,13 +59,13 @@ export const StrikeZone = () => {
   );
 
   return (
-    <>
+    <div>
       <Container ref={domRef}>
         <Ball />
         {trail.map(({ rotateX, x, y }, zone) => {
           return <StrikeBox style={{ x, rotateX }} zone={strikeZones[zone]} />;
         })}
       </Container>
-    </>
+    </div>
   );
 };

@@ -59,23 +59,22 @@ export default function Bar({ data }) {
 
   return (
     <>
-      {pitches.length > 0 && (
-        <ResizableBox
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+      <ResizableBox
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {pitches.length > 0 && (
           <Chart
             options={{
               data,
               primaryAxis,
               secondaryAxes,
               getDatumStyle: (datum) => {
-                console.log({ datum });
                 return {
                   circle: {
                     r: 5 + datum.originalDatum?.prediction * 1.5,
@@ -88,8 +87,8 @@ export default function Bar({ data }) {
               },
             }}
           />
-        </ResizableBox>
-      )}
+        )}
+      </ResizableBox>
     </>
   );
 }

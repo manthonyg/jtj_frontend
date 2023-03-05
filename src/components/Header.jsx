@@ -7,17 +7,15 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import CssBaseline from "@mui/material/CssBaseline";
 import { HideOnScroll } from "./HideOnScroll";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
-const pages = ["Home", "About", "Contact"];
+const pages = ["Home", "About"];
 const settings = ["Logout"];
 
 function ResponsiveAppBar({ children, ...props }) {
@@ -112,7 +110,7 @@ function ResponsiveAppBar({ children, ...props }) {
                     <MenuItem key={page} onClick={handleCloseNavMenu}>
                       <Typography
                         textAlign="center"
-                        onClick={() => navigate(`/${page}`)}
+                        onClick={() => navigate(`/${page.toLowerCase()}`)}
                       >
                         {page}
                       </Typography>
@@ -142,7 +140,7 @@ function ResponsiveAppBar({ children, ...props }) {
                 {pages.map((page) => (
                   <Button
                     key={page}
-                    onClick={handleCloseNavMenu}
+                    onClick={() => navigate(`/${page.toLowerCase()}`)}
                     sx={{ my: 2, color: "white", display: "block" }}
                   >
                     {page}

@@ -6,20 +6,10 @@ const StyledRadio = styled(Radio)({
   borderRadius: 3,
   opacity: 0.5,
   "&:hover": {
-    transform: "scale(1.2)",
     backgroundColor: "transparent",
-    // boxShadow: `19px 19px 39px #0d0d0d,
-    //          -19px -19px 39px #353535`,
     opacity: 1,
   },
-  // "&$checked": {
-  //   color: "primary",
-  //   border: "2px solid black",
-  // },
   "&.Mui-checked": {
-    // boxShadow: `19px 19px 39px #0d0d0d,
-    //          -19px -19px 39px #353535`,
-    transform: "scale(1.1)",
     opacity: 1,
     "&::after": {
       content: '""',
@@ -30,7 +20,6 @@ const StyledRadio = styled(Radio)({
       width: 10,
       height: 10,
       backgroundColor: "red",
-      // border: "2px solid #0000ff",
     },
   },
 });

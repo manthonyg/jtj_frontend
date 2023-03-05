@@ -2,15 +2,8 @@ import { LegendThreshold } from "@vx/legend";
 import { scaleThreshold } from "@vx/scale";
 
 const threshold = scaleThreshold({
-  domain: [0.02, 0.04, 0.06, 0.08, 0.1],
-  range: [
-    "#f2f0f7",
-    "#dadaeb",
-    "#bcbddc",
-    "#9e9ac8",
-    "#756bb1",
-    "rgb(169, 0, 86)",
-  ],
+  domain: [2, 3.5, 4.0, 4.5, 5],
+  range: ["#8000f8", "#8000d1", "#8000b6", "#80008e", "#d2005b", "#ff0000"],
 });
 
 export default function Legend() {

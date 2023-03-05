@@ -142,7 +142,6 @@ export const BallBox = ({ zone }) => {
         ? tiltEffectSettings.max
         : rotateYUncapped;
 
-    console.log({ rotateX, rotateY });
     setRotateX(rotateX);
     setRotateY(rotateY);
 
@@ -259,7 +258,6 @@ export const BallBox = ({ zone }) => {
       ref={ref}
       {...bind()}
       onMouseLeave={mouseLeave}
-      onClick={() => console.log("clicked")}
       style={{
         transform: "perspective(600px)",
         scale: to([scale, zoom], (s, z) => s + z),

@@ -31,6 +31,7 @@ import {
   Outs,
   Inning,
 } from "../StyledComponents";
+import { createButton } from "react-social-login-buttons";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import Slide from "@mui/material/Slide";
 import { getClosestHexValue } from "../components/StrikeZone/utils";
@@ -41,17 +42,10 @@ import "react-toastify/dist/ReactToastify.css";
 import Header from "../components/Header";
 import { PitchType } from "../components/PitchType";
 import { IMaskInput } from "react-imask";
-import { useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import Footer from "../components/Footer";
-import {
-  BrowserRouter,
-  Navigate,
-  Redirect,
-  Route,
-  Routes,
-} from "react-router-dom";
-
+import { Navigate } from "react-router-dom";
+import Legend from "../components/Legend";
 import {
   FormControl,
   FormControlLabel,
@@ -63,15 +57,8 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
 import Typography from "@mui/material/Typography";
-import Progress from "../components/Progress";
 import { styled } from "@mui/material/styles";
-import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
-  useRecoilValue,
-} from "recoil";
+import { useRecoilState } from "recoil";
 import { pitchesState, pitchState } from "../models/atoms";
 import { useEffect } from "react";
 
@@ -136,21 +123,12 @@ export default function Main(props) {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
-  // const location = useLocation();
-  // const { user = null } = location?.state;
-
   const { user, login, profile, logout } = useAuth();
 
-  const [teams, setTeams] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [pitch, setPitch] = useRecoilState(pitchState);
 
-  // const [pitches, setPitches] = useLocalStorage("pitches", []);
   const [pitches, setPitches] = useRecoilState(pitchesState);
 
   const [zone, setZone] = useState(0);
@@ -166,7 +144,6 @@ export default function Main(props) {
 
   useEffect(() => {
     const token = PubSub.subscribe("zoneSelected", (msg, data) => {
-      console.log({ msg, data, pitch });
       setPitch({
         ...pitch,
         zone: data,
@@ -214,7 +191,6 @@ export default function Main(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    alert(JSON.stringify(pitch, null, 2));
     try {
       PubSub.publish("pitchThrown", pitch);
       const _pitch = {
@@ -225,33 +201,41 @@ export default function Main(props) {
         runnerOnSecond: pitch.runnerOnSecond ? 1 : 0,
         runnerOnThird: pitch.runnerOnThid ? 1 : 0,
         pitchNumber: parseInt(pitch.balls) + parseInt(pitch.strikes),
-        zone: zone,
+        pitchType: parseInt(pitch.pitchType),
+        zone: parseInt(zone),
       };
-      const data = await fetch("http://3.83.153.234:3002/predict", {
+      // const d = await fetch(
+      //   "https://vtdcbhopv6.execute-api.us-east-1.amazonaws.com/v1/",
+      //   {
+      //     method: "GET",
+      //   }
+      // );
+      const data = await fetch("https://api.judgedajudge.com/v1", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(_pitch),
       });
 
-      const dataJson = await data.json();
+      const dataJ = await data.json();
+      const dataJson = JSON.parse(dataJ.body);
+      console.log({ data });
+
+      console.log("DATA", { dataJson });
 
       setRawData(dataJson);
-      console.log({ dataJson });
       const newPitch = {
         ...pitch,
-        prediction: toPercentage(dataJson.data[11]),
+        prediction: toPercentage(dataJson[11]),
       };
       setPitch(newPitch);
-      setPrediction(toPercentage(dataJson.data[11]));
+      setPrediction(toPercentage(dataJson[11]));
 
       setPitches([...pitches, newPitch]);
       setLocalStoragePitches([...pitches, newPitch]);
       notifySuccess("Pitch Submitted!");
     } catch (error) {
+      console.error({ error });
       notifyError("Error Submitting Pitch!");
-      console.log({ error });
     }
   };
 
@@ -296,8 +280,6 @@ export default function Main(props) {
   });
 
   const handleChange = (event) => {
-    console.log(event.target.name);
-    console.log(event.target.value);
     if (event.target.name === "count") {
       const [strikes, balls] = event.target.value.split("-");
       setPitch({
@@ -329,7 +311,7 @@ export default function Main(props) {
   const steps = [
     {
       label: "Input game data",
-      description: `Every piece of game data will have some impact on the outcome- the count, the outs, the inning, etc.`,
+      description: `Use the interactive scoreboard to change the game situation`,
       component: (
         <Grid container>
           <Grid item xs={12}>
@@ -498,7 +480,6 @@ export default function Main(props) {
                           onBlur={() => handleEditing(null)}
                           name="count"
                           onChange={(e) => {
-                            console.log(e.target.value);
                             const strikes = e.target.value.split("-")[0];
                             const balls = e.target.value.split("-")[1];
                             setPitch({
@@ -925,6 +906,8 @@ export default function Main(props) {
                         sx={{ m: 2, p: 2 }}
                         style={{
                           minHeight: 500,
+                          margin: 0,
+                          padding: 0,
                           display: "flex",
                           justifyContent: "center",
                           alignItems: "center",
@@ -976,20 +959,35 @@ export default function Main(props) {
                 flexWrap: "wrap",
               }}
             >
-              {/* <Progress /> */}
+              <Typography variant="h4" sx={{ mb: 2 }}>
+                Result
+              </Typography>
               <Slide direction="left" in={true} mountOnEnter unmountOnExit>
                 <Avatar
                   sx={{
-                    width: 150,
-                    height: 150,
+                    width: 175,
+                    height: 175,
                     m: 2,
+                    border: `20px solid #8000f850`,
                     backgroundColor: getClosestHexValue(prediction),
                   }}
                 >
                   {prediction}%
                 </Avatar>
               </Slide>
-              <Button onClick={() => setActiveStep(0)}>Reset</Button>
+              <Legend />
+
+              <Button
+                sx={{ m: 2 }}
+                style={{
+                  width: 200,
+                  backgroundColor: "#3c52c3",
+                  color: "#ffffff",
+                }}
+                onClick={() => setActiveStep(0)}
+              >
+                Reset
+              </Button>
             </Box>
           )}
         </Grid>
@@ -1008,7 +1006,6 @@ export default function Main(props) {
                 <Typography>Predictions by Pitch Type</Typography>
                 <Barchart data={dataByPitchType} />
               </Grid>
-
               <Grid item xs={12}></Grid>
             </Grid>
           </Grid>

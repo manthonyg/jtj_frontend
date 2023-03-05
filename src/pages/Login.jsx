@@ -1,27 +1,21 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { styled } from "@mui/material/styles";
 import { useAuth } from "../hooks/useAuth";
 import { SocialIcon } from "react-social-icons";
 import { GoogleLoginButton } from "react-social-login-buttons";
 import { createButton } from "react-social-login-buttons";
-
-import {
-  BrowserRouter,
-  Navigate,
-  Redirect,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 function Copyright(props) {
+  const navigate = useNavigate();
+
   return (
     <>
       <Typography
@@ -38,12 +32,20 @@ function Copyright(props) {
       <Typography>
         This is a tool that utilizes machine learning to predict the chance
         Aaron Judge, #99 for the New York Yankees, will hit a home run.{" "}
-        <Link>Learn more about this project</Link>
+        <Link
+          sx={{ cursor: "pointer" }}
+          onClick={(event) => {
+            event.preventDefault();
+            return navigate("/about");
+          }}
+        >
+          Learn more about this project
+        </Link>
       </Typography>
-      <Box>
-        <SocialIcon url="https://linkedin.com/in/michaelgrandori" />
-        <SocialIcon url="https://medium.com" />
-        <SocialIcon url="https://github.com" />
+      <Box sx={{ display: "flex", gap: 3 }}>
+        <SocialIcon url="https://www.linkedin.com/in/michael-grandori/" />
+        <SocialIcon url="https://medium.com/@grandorimichael" />
+        <SocialIcon url="https://github.com/manthonyg" />
       </Box>
     </>
   );
@@ -56,7 +58,7 @@ export const Login = () => {
     text: "Demo Login",
     icon: "facebook",
     iconFormat: (name) => `fa fa-${name}`,
-    style: { background: "#d0453a" },
+    style: { paddingLeft: 40, background: "#d0453a" },
     activeStyle: { background: "#d0453a50" },
   };
 
@@ -126,6 +128,7 @@ export const Login = () => {
                 display: "flex",
                 justifyContent: "center",
                 flexWrap: "wrap",
+                gap: 5,
               }}
               noValidate
             >

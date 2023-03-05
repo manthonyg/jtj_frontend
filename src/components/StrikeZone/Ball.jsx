@@ -21,7 +21,6 @@ export const Ball = () => {
   const [strikeZoneBounds, setStrikeZoneBounds] = useState(null);
   useEffect(() => {
     const token = PubSub.subscribe("strike-zone-bounds", (msg, bounds) => {
-      console.log({ bounds });
       setStrikeZoneBounds(bounds);
     });
     return () => {
