@@ -176,18 +176,32 @@ export default function Main(props) {
         const user = await Auth.currentAuthenticatedUser({
           bypassCache: false,
         });
-        const sesh = await Auth.currentSession();
-        const idToken = sesh.getIdToken().getJwtToken();
-        setAuthToken(idToken);
       } catch (error) {
-        notifyError(
-          "You must be logged in to use this app. Please login or create an account."
-        );
-        setTimeout(() => {
-          navigate("/login");
-        }, 5000);
         console.log({ error });
       }
+
+      try {
+        const sesh = await Auth.currentSession();
+        console.log({ sesh });
+      } catch (error) {
+        console.log({ error });
+      }
+
+      try {
+        // const idToken = sesh.getIdToken().getJwtToken();
+        // setAuthToken(idToken);
+        // console.log({ idToken });
+      } catch (error) {
+        // console.log({ error });
+      }
+      // notifyError(
+      //   "You must be logged in to use this app. Please login or create an account."
+      // );
+      // setTimeout(() => {
+      //   navigate("/login");
+      // }, 5000);
+      // console.log({ error });
+      // }
     })();
   }, []);
 
