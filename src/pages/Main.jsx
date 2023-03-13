@@ -1031,23 +1031,25 @@ export default function Main(props) {
           )}
         </Grid>
         <Grid item xs={12} lg={6} display="flex">
-          <Grid container display={"flex"} alignItems={"center"}>
-            <Grid item xs={12}>
-              <Grid item xs={12} style={{ margin: 20 }}>
-                <Typography>Predictions by Zone</Typography>
-                <Barchart data={dataByZone} />
+          {pitches.length > 0 && (
+            <Grid container display={"flex"} alignItems={"center"}>
+              <Grid item xs={12}>
+                <Grid item xs={12} style={{ margin: 20 }}>
+                  <Typography>Predictions by Zone</Typography>
+                  <Barchart data={dataByZone} />
+                </Grid>
+                <Grid item xs={12} style={{ margin: 20 }}>
+                  <Typography>Predictions by Speed</Typography>
+                  <Barchart data={dataBySpeed} />
+                </Grid>
+                <Grid item xs={12} style={{ margin: 20 }}>
+                  <Typography>Predictions by Pitch Type</Typography>
+                  <Barchart data={dataByPitchType} />
+                </Grid>
+                <Grid item xs={12}></Grid>
               </Grid>
-              <Grid item xs={12} style={{ margin: 20 }}>
-                <Typography>Predictions by Speed</Typography>
-                <Barchart data={dataBySpeed} />
-              </Grid>
-              <Grid item xs={12} style={{ margin: 20 }}>
-                <Typography>Predictions by Pitch Type</Typography>
-                <Barchart data={dataByPitchType} />
-              </Grid>
-              <Grid item xs={12}></Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
       </Grid>
       <Footer />
