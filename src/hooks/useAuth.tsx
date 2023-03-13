@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage.jsx";
@@ -43,23 +42,22 @@ export const useAuth = () => {
     }
   }, [user]);
 
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      setUser(codeResponse);
-    },
-    onError: (error) => console.log("Login Failed:", error),
-  });
+  // const login = useGoogleLogin({
+  //   onSuccess: (codeResponse) => {
+  //     setUser(codeResponse);
+  //   },
+  //   onError: (error) => console.log("Login Failed:", error),
+  // });
 
   const demoLogin = () => {
     setUser("demo");
   };
 
   const logout = () => {
-    googleLogout();
     window.localStorage.removeItem("user");
     window.localStorage.removeItem("profile");
     navigate("/login");
   };
 
-  return { user, loading, profile, login, demoLogin, logout };
+  return { user, loading, profile, demoLogin, logout };
 };

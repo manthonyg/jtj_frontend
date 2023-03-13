@@ -43,3 +43,8 @@ export const pitchState = atom({
     prediction: 0,
   }, // default value (aka initial value)
 });
+
+export const authTokenState = atom({
+  key: "authToken",
+  default: "",
+});

@@ -31,6 +31,8 @@ import {
   Outs,
   Inning,
 } from "../StyledComponents";
+import { Auth, Hub } from "aws-amplify";
+
 import { createButton } from "react-social-login-buttons";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import Slide from "@mui/material/Slide";
@@ -59,8 +61,10 @@ import StepContent from "@mui/material/StepContent";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { useRecoilState } from "recoil";
-import { pitchesState, pitchState } from "../models/atoms";
+import { pitchesState, pitchState, authTokenState } from "../models/atoms";
 import { useEffect } from "react";
+import { Router } from "../components/service/routes";
+import ReactLoading from "react-loading";
 
 const CustomChip = styled(Chip)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.main,
@@ -136,11 +140,53 @@ export default function Main(props) {
   const [isDragging, setIsDragging] = useState(false);
   const [editing, setIsEditing] = useState(null);
   const [prediction, setPrediction] = useState(0);
-
+  const [authToken, setAuthToken] = useRecoilState(authTokenState);
   const [localStoragePitches, setLocalStoragePitches] = useLocalStorage(
     "pitches",
     []
   );
+
+  const notifyError = (errorMessage) =>
+    toast.error(errorMessage, {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+  const notifySuccess = (successMessage) =>
+    toast.success(successMessage, {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const user = await Auth.currentAuthenticatedUser({
+          bypassCache: false,
+        });
+        const sesh = await Auth.currentSession();
+        const idToken = sesh.getIdToken().getJwtToken();
+        setAuthToken(idToken);
+      } catch (error) {
+        notifyError(
+          "You must be logged in to use this app. Please login or create an account."
+        );
+        console.log({ error });
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const token = PubSub.subscribe("zoneSelected", (msg, data) => {
@@ -164,31 +210,8 @@ export default function Main(props) {
     return (number * 100).toFixed(2);
   }
 
-  const notifySuccess = (successMessage) =>
-    toast.success(successMessage, {
-      position: "bottom-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-
-  const notifyError = (errorMessage) =>
-    toast.error(errorMessage, {
-      position: "bottom-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-
   const handleSubmit = async (event) => {
+    setIsLoading(true);
     event.preventDefault();
 
     try {
@@ -204,23 +227,19 @@ export default function Main(props) {
         pitchType: parseInt(pitch.pitchType),
         zone: parseInt(zone),
       };
-      // const d = await fetch(
-      //   "https://vtdcbhopv6.execute-api.us-east-1.amazonaws.com/v1/",
-      //   {
-      //     method: "GET",
-      //   }
-      // );
-      const data = await fetch("https://api.judgedajudge.com/v1", {
+
+      const data = await fetch(Router.getRoute("prediction", "v1"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
         body: JSON.stringify(_pitch),
       });
 
-      const dataJ = await data.json();
-      const dataJson = JSON.parse(dataJ.body);
-      console.log({ data });
+      const rawData = await data.json();
 
-      console.log("DATA", { dataJson });
+      const dataJson = JSON.parse(rawData.body);
 
       setRawData(dataJson);
       const newPitch = {
@@ -232,7 +251,8 @@ export default function Main(props) {
 
       setPitches([...pitches, newPitch]);
       setLocalStoragePitches([...pitches, newPitch]);
-      notifySuccess("Pitch Submitted!");
+      setIsLoading(false);
+      // notifySuccess("Pitch Submitted!");
     } catch (error) {
       console.error({ error });
       notifyError("Error Submitting Pitch!");
@@ -867,7 +887,7 @@ export default function Main(props) {
 
   return (
     <div style={{ height: "100%" }}>
-      {!user && <Navigate to="/login" />}
+      {/* {!user && <Navigate to="/login" />} */}
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
@@ -959,22 +979,41 @@ export default function Main(props) {
                 flexWrap: "wrap",
               }}
             >
-              <Typography variant="h4" sx={{ mb: 2 }}>
-                Result
-              </Typography>
-              <Slide direction="left" in={true} mountOnEnter unmountOnExit>
-                <Avatar
-                  sx={{
-                    width: 175,
-                    height: 175,
-                    m: 2,
-                    border: `20px solid #8000f850`,
-                    backgroundColor: getClosestHexValue(prediction),
-                  }}
-                >
-                  {prediction}%
-                </Avatar>
-              </Slide>
+              {isLoading && (
+                <Typography variant="h4" sx={{ mb: 2 }}>
+                  Predicting...
+                </Typography>
+              )}
+              {!isLoading && (
+                <Typography variant="h4" sx={{ mb: 2 }}>
+                  Result
+                </Typography>
+              )}
+              {isLoading && (
+                <ReactLoading
+                  type={"cubes"}
+                  color={"#8000f850"}
+                  height={"10%"}
+                  width={"10%"}
+                />
+              )}
+              {!isLoading && (
+                <>
+                  <Slide direction="left" in={true} mountOnEnter unmountOnExit>
+                    <Avatar
+                      sx={{
+                        width: 175,
+                        height: 175,
+                        m: 2,
+                        border: `20px solid #8000f850`,
+                        backgroundColor: getClosestHexValue(prediction),
+                      }}
+                    >
+                      {prediction}%
+                    </Avatar>
+                  </Slide>
+                </>
+              )}
               <Legend />
 
               <Button

@@ -8,10 +8,24 @@ import { Login } from "./pages/Login";
 import { NotFound } from "./pages/NotFound";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 import Main from "./pages/Main";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import About from "./pages/About";
 import theme from "./theme";
 import { RecoilRoot } from "recoil";
+import { Amplify } from "aws-amplify";
+
+Amplify.configure({
+  oauth: {
+    domain: process.env.REACT_APP_DOMAIN,
+    redirectSignIn: process.env.REACT_APP_REDIRECT_SIGN_IN,
+    redirectSignOut: process.env.REACT_APP_REDIRECT_SIGN_OUT,
+    responseType: process.env.REACT_APP_RESPONSE_TYPE,
+    scope: process.env.REACT_APP_SCOPE.split(","),
+  },
+  identityPoolId: process.env.REACT_APP_IDENTITY_POOL_ID, // (required) - Amazon Cognito Identity Pool ID
+  region: process.env.REACT_APP_REGION, // (required) - Amazon Cognito Region
+  userPoolId: process.env.REACT_APP_USER_POOL_ID, // (optional) - Amazon Cognito User Pool ID
+  userPoolWebClientId: process.env.REACT_APP_USER_POOL_WEB_CLIENT_ID, // (optional) - Amazon Cognito Web Client ID (App client secret needs to be disabled)
+});
 
 const router = createBrowserRouter([
   {
@@ -47,15 +61,13 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <RecoilRoot>
-    <GoogleOAuthProvider clientId="573638032527-4r7d005c9v0mtk7nta5ocejjev5fglqq.apps.googleusercontent.com">
-      <React.StrictMode>
-        <MuiThemeProvider theme={theme}>
-          <div style={{ backgroundColor: "#ffffff" }}>
-            <RouterProvider router={router} />
-          </div>
-        </MuiThemeProvider>
-      </React.StrictMode>
-    </GoogleOAuthProvider>
+    <React.StrictMode>
+      <MuiThemeProvider theme={theme}>
+        <div style={{ backgroundColor: "#ffffff" }}>
+          <RouterProvider router={router} />
+        </div>
+      </MuiThemeProvider>
+    </React.StrictMode>
   </RecoilRoot>
 );
 
