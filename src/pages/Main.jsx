@@ -46,7 +46,7 @@ import { PitchType } from "../components/PitchType";
 import { IMaskInput } from "react-imask";
 import { useAuth } from "../hooks/useAuth";
 import Footer from "../components/Footer";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Legend from "../components/Legend";
 import {
   FormControl,
@@ -130,7 +130,7 @@ export default function Main(props) {
   const { user, login, profile, logout } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigate = useNavigate();
   const [pitch, setPitch] = useRecoilState(pitchState);
 
   const [pitches, setPitches] = useRecoilState(pitchesState);
@@ -183,6 +183,9 @@ export default function Main(props) {
         notifyError(
           "You must be logged in to use this app. Please login or create an account."
         );
+        setTimeout(() => {
+          navigate("/login");
+        }, 5000);
         console.log({ error });
       }
     })();
