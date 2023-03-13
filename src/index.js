@@ -12,7 +12,7 @@ import About from "./pages/About";
 import theme from "./theme";
 import { RecoilRoot } from "recoil";
 import { Amplify } from "aws-amplify";
-
+import Privacy from "./pages/Privacy";
 console.log(process.env);
 Amplify.configure({
   oauth: {
@@ -46,8 +46,8 @@ const router = createBrowserRouter([
     element: <Login test="hi" />,
   },
   {
-    path: "/policy",
-    element: <Navigate to="/privacy.html" />,
+    path: "/privacy",
+    element: <Privacy />,
   },
   {
     path: "/strikezone",
