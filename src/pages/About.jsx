@@ -56,7 +56,7 @@ export default function Album() {
                     flexDirection: "row",
                   }}
                 ></Box>
-                Judge the Judge is based on a machine learning model that
+                Judge da Judge is based on a machine learning model that
                 classifies pitch data into different categories. The model was
                 predominantly built using TensorFlow and Keras, two popular
                 frameworks for building deep learning models, which can learn to

@@ -74,7 +74,7 @@ function ResponsiveAppBar({ children, ...props }) {
                   textDecoration: "none",
                 }}
               >
-                JUDGE THE JUDGE
+                JUDGE DA JUDGE
               </Typography>
 
               <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -134,7 +134,7 @@ function ResponsiveAppBar({ children, ...props }) {
                   textDecoration: "none",
                 }}
               >
-                JTJ
+                JDJ
               </Typography>
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                 {pages.map((page) => (

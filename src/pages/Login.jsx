@@ -124,7 +124,7 @@ export const Login = () => {
               component="h1"
               variant="h5"
             >
-              JUDGE THE JUDGE
+              JUDGE DA JUDGE
             </Typography>
 
             <Box

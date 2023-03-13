@@ -13,13 +13,14 @@ import theme from "./theme";
 import { RecoilRoot } from "recoil";
 import { Amplify } from "aws-amplify";
 
+console.log(process.env);
 Amplify.configure({
   oauth: {
     domain: process.env.REACT_APP_DOMAIN,
     redirectSignIn: process.env.REACT_APP_REDIRECT_SIGN_IN,
     redirectSignOut: process.env.REACT_APP_REDIRECT_SIGN_OUT,
     responseType: process.env.REACT_APP_RESPONSE_TYPE,
-    scope: process.env.REACT_APP_SCOPE.split(","),
+    scope: process.env.REACT_APP_SCOPE?.split(","),
   },
   identityPoolId: process.env.REACT_APP_IDENTITY_POOL_ID, // (required) - Amazon Cognito Identity Pool ID
   region: process.env.REACT_APP_REGION, // (required) - Amazon Cognito Region
