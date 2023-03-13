@@ -14,6 +14,8 @@ jobs:
       - name: install dependencies
         run: npm install
       - name: bundle modules
+        env:
+          REACT_APP_DOMAIN: ${{secrets.REACT_APP_DOMAIN}}
         run: npm run build
       - name: set aws credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -26,6 +28,6 @@ jobs:
       - name: Print environment variables
         run: |
           echo "Environment variables:"
-          env
+          env | grep "REACT_APP"
 env:
   CI: false
