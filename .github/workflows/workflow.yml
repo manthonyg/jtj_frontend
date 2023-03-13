@@ -23,5 +23,9 @@ jobs:
           aws-region: us-east-1
       - name: deploy to s3
         run: aws s3 sync ./build/ s3://jtj-frontend
+      - name: Print environment variables
+        run: |
+          echo "Environment variables:"
+          env
 env:
   CI: false
