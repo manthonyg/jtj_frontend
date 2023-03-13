@@ -13,7 +13,7 @@ import theme from "./theme";
 import { RecoilRoot } from "recoil";
 import { Amplify } from "aws-amplify";
 import Privacy from "./pages/Privacy";
-console.log(process.env);
+
 Amplify.configure({
   oauth: {
     domain: process.env.REACT_APP_DOMAIN,
