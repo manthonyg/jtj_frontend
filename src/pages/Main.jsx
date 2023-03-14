@@ -169,7 +169,7 @@ export default function Main(props) {
       progress: undefined,
       theme: "dark",
     });
-
+  window.LOG_LEVEL = "DEBUG";
   useEffect(() => {
     (async () => {
       try {
