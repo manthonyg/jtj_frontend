@@ -177,9 +177,13 @@ export default function Main(props) {
           bypassCache: false,
         });
 
+        console.log({ user });
+
         const session = await Auth.currentSession();
+        console.log({ session });
 
         const idToken = session.getIdToken().getJwtToken();
+        console.log({ idToken });
         setAuthToken(idToken);
       } catch (error) {
         console.error({ error });
